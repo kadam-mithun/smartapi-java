@@ -29,6 +29,7 @@ public class Examples {
 
 	public void getProfile(SmartConnect smartConnect) throws IOException, SmartAPIException {
 		User profile = smartConnect.getProfile();
+		System.out.println(profile.toString());
 	}
 
 	/** CONSTANT Details */
@@ -271,106 +272,6 @@ public class Examples {
 		requestObejct.put("todate", "2021-03-09 09:20");
 
 		String response = smartConnect.candleData(requestObejct);
-	}
-
-	public void tickerUsage(String clientId, String feedToken, String strWatchListScript, String task)
-			throws SmartAPIException {
-
-		SmartAPITicker tickerProvider = new SmartAPITicker(clientId, feedToken, strWatchListScript, task);
-
-		tickerProvider.setOnConnectedListener(new OnConnect() {
-			@Override
-			public void onConnected() {
-				System.out.println("subscribe() called!");
-				tickerProvider.subscribe();
-			}
-		});
-
-		tickerProvider.setOnTickerArrivalListener(new OnTicks() {
-			@Override
-			public void onTicks(JSONArray ticks) {
-				System.out.println("ticker data: " + ticks.toString());
-			}
-		});
-
-		/**
-		 * connects to Smart API ticker server for getting live quotes
-		 */
-		tickerProvider.connect();
-
-		/**
-		 * You can check, if websocket connection is open or not using the following
-		 * method.
-		 */
-		boolean isConnected = tickerProvider.isConnectionOpen();
-		System.out.println(isConnected);
-
-		// After using SmartAPI ticker, close websocket connection.
-		// tickerProvider.disconnect();
-
-	}
-
-	public void smartWebSocketUsage(String clientId, String jwtToken, String apiKey, String actionType, String feedType)
-			throws SmartAPIException {
-
-		SmartWebsocket smartWebsocket = new SmartWebsocket(clientId, jwtToken, apiKey, actionType, feedType);
-
-		smartWebsocket.setOnConnectedListener(new SmartWSOnConnect() {
-
-			@Override
-			public void onConnected() {
-
-				smartWebsocket.runscript();
-			}
-		});
-
-		smartWebsocket.setOnDisconnectedListener(new SmartWSOnDisconnect() {
-			@Override
-			public void onDisconnected() {
-				System.out.println("onDisconnected");
-			}
-		});
-
-		/** Set error listener to listen to errors. */
-		smartWebsocket.setOnErrorListener(new SmartWSOnError() {
-			@Override
-			public void onError(Exception exception) {
-				System.out.println("onError: " + exception.getMessage());
-			}
-
-			@Override
-			public void onError(SmartAPIException smartAPIException) {
-				System.out.println("onError: " + smartAPIException.getMessage());
-			}
-
-			@Override
-			public void onError(String error) {
-				System.out.println("onError: " + error);
-			}
-		});
-
-		smartWebsocket.setOnTickerArrivalListener(new SmartWSOnTicks() {
-			@Override
-			public void onTicks(JSONArray ticks) {
-				System.out.println("ticker data: " + ticks.toString());
-			}
-		});
-
-		/**
-		 * connects to Smart API ticker server for getting live quotes
-		 */
-		smartWebsocket.connect();
-
-		/**
-		 * You can check, if websocket connection is open or not using the following
-		 * method.
-		 */
-		boolean isConnected = smartWebsocket.isConnectionOpen();
-		System.out.println(isConnected);
-
-		// After using SmartAPI ticker, close websocket connection.
-		// smartWebsocket.disconnect();
-
 	}
 
 	/** Logout user. */
