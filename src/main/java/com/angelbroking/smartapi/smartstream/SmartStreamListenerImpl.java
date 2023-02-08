@@ -33,7 +33,7 @@ public class SmartStreamListenerImpl implements SmartStreamListener {
 	@Override
 	public void onQuoteArrival(Quote quote) {
 		ZonedDateTime exchangeTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(quote.getExchangeFeedTimeEpochMillis()), TZ_IST);
-		String data = String.format("token: %s"
+		String quoteData = String.format("token: %s"
 				+ " sequenceNumber: %d"
 				+ " ltp: %.2f"
 				+ " open: %.2f"
@@ -51,18 +51,36 @@ public class SmartStreamListenerImpl implements SmartStreamListener {
 				(quote.getClosePrice() / 100.0),
 				exchangeTime,
 				Instant.now().toEpochMilli() - quote.getExchangeFeedTimeEpochMillis());
-		System.out.println(data);
+		System.out.println(quoteData);
 	}
 
 	@Override
 	public void onSnapQuoteArrival(SnapQuote snapQuote) {
-		// TODO Auto-generated method stub
-
+		ZonedDateTime exchangeTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(snapQuote.getExchangeFeedTimeEpochMillis()), TZ_IST);
+		String snapQuoteData = String.format("token: %s"
+				+ " sequenceNumber: %d"
+				+ " ltp: %.2f"
+				+ " open: %.2f"
+				+ " high: %.2f"
+				+ " low: %.2f"
+				+ " close: %.2f"
+				+ " exchangeTime: %s"
+				+ " exchangeToClientLatency: %s",
+				snapQuote.getToken().toString(),
+				snapQuote.getSequenceNumber(),
+				(snapQuote.getLastTradedPrice() / 100.0),
+				(snapQuote.getOpenPrice() / 100.0),
+				(snapQuote.getHighPrice() / 100.0),
+				(snapQuote.getLowPrice() / 100.0),
+				(snapQuote.getClosePrice() / 100.0),
+				exchangeTime,
+				Instant.now().toEpochMilli() - snapQuote.getExchangeFeedTimeEpochMillis());
+		System.out.println(snapQuoteData);
 	}
 
 	@Override
 	public void onConnected() {
-		// TODO Auto-generated method stub
+		System.out.println("web socket connected");
 
 	}
 
